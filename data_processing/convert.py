@@ -6,23 +6,20 @@ from shapely.geometry import Point
 # Open the raster file
 with rasterio.open("data_processing/input_data/Granada_Surface_Temperature.tif") as src:
     # Read the temperature data into a NumPy array
-    temperature_data = src.read(1)  # Read the first band of the raster (assuming it's the temperature data)
+    temperature_data = src.read(1)  
     
-    # Get the metadata (for geospatial information)
+    # Get the metadata 
     transform = src.transform
-    crs = src.crs  # Coordinate Reference System (CRS)
+    crs = src.crs  
 
-# Define block size (4x4 pixels, each pixel is 30m x 30m, so block size = 120m x 120m)
+# Define new block size 
 block_size = 4
 
-# Reshape the array to 4x4 blocks and calculate the mean temperature for each block
+# Reshape the array to 4x4 pixel blocks 
 reshaped_data = temperature_data.reshape(-1, block_size, block_size)
 
 # Calculate the mean temperature for each 120m x 120m block (averaging the pixels in each block)
 mean_temperatures = reshaped_data.mean(axis=(1, 2))  # Mean across rows and columns of each block
-
-# Get the coordinates of the block centers
-# The 'transform' tells us the location of the pixels, so we can use it to calculate the block centers
 
 # Calculate the center of each 120m x 120m block
 block_centers = []
